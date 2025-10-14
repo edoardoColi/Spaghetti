@@ -4,12 +4,27 @@ const MAX_SPEED = 300.0
 const ACCELERATION = 600.0
 const FRICTION = 800.0
 
+# Fuel system
+var fuel: float = 100.0
+const MAX_FUEL: float = 100.0
+const FUEL_CONSUMPTION: float = 8.0  # fuel per second
+
 var stunned: bool = false
 var explode: bool = false
+
+# --- Distance tracking ---
+var total_distance: float = 0.0
+var last_position: Vector2
+signal distance_changed(distance: float)
 
 @onready var anim_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var collision_updown: CollisionShape2D = $CollisionUpDown
 @onready var collision_leftright: CollisionShape2D = $CollisionLeftRight
+@onready var fuel_level: NinePatchRect = $Camera2D/UI/Tank/Level
+@onready var gameover: NinePatchRect = $Camera2D/UI/Gameover
+
+func _ready() -> void:
+	last_position = global_position
 
 func _physics_process(delta: float) -> void:
 	# --- Input only works if NOT stunned ---
@@ -18,6 +33,27 @@ func _physics_process(delta: float) -> void:
 	input_vector.y = Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
 	input_vector = input_vector.normalized()
 
+	# --- Distance tracking ---
+	var moved_distance := global_position.distance_to(last_position)
+	total_distance += moved_distance/30
+	last_position = global_position
+	distance_changed.emit(total_distance)
+
+	# Consume fuel based on movement
+	if input_vector != Vector2.ZERO and not explode:
+		fuel -= FUEL_CONSUMPTION * delta
+		fuel = clamp(fuel, 0, MAX_FUEL)
+		update_fuel_UI()
+	else:
+		fuel -= MAX_FUEL/10000
+		update_fuel_UI()
+
+# If fuel empty, quit the game
+	if fuel <= 0:
+		gameover.visible = true
+		await get_tree().create_timer(5.0).timeout
+		get_tree().quit()
+	
 	if explode:
 		# Car explode: stop and ignore input
 		velocity = Vector2.ZERO
@@ -71,3 +107,9 @@ func explode_for(duration: float) -> void:
 	anim_sprite.stop()
 	var t = get_tree().create_timer(duration)
 	t.timeout.connect(func(): explode = false)
+
+func update_fuel_UI() -> void:
+	# Map fuel 0..MAX_FUEL to angle -125..-45 degrees
+	var t = fuel / MAX_FUEL
+	var angle_deg = lerp(-225.1, -45.1, t)  # 0 fuel -> -125, full -> -45
+	fuel_level.rotation_degrees = angle_deg

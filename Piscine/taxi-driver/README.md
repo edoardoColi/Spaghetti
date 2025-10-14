@@ -1,4 +1,5 @@
 # Note di Implementazione – by Me and ChatGPT
+Crediti anche per [Brackeys](https://youtu.be/LOhfqjmasi0?si=NP10GlYgAc316hT4).
 
 ## Normalizzazione dell’input da tastiera
 
@@ -63,3 +64,17 @@ Per migliorare la gestione delle interazioni:
 * Tramite la **collision mask**, il coin/ostacolo può rilevare solo il giocatore, senza influenzare altri oggetti.
 
 Questa separazione semplifica il controllo e riduce conflitti tra diversi tipi di entità.
+
+---
+
+## Gestione della UI
+
+Durante la pausa, i nodi si fermano per impostazione predefinita. Per rendere interattivo il **PauseMenu**, impostare la proprietà `pause_mode` dei pulsanti su **Always**.
+
+---
+
+## Gestione della pausa
+
+`get_tree().paused = true` sospende tutto, inclusi i pulsanti. Per farli funzionare comunque, in Inspector sotto **Process**, impostare su **Always**.
+
+---
