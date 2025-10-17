@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=4 uid="uid://bj16w2lalhl7f"]
+[gd_scene load_steps=19 format=4 uid="uid://bj16w2lalhl7f"]
 
 [ext_resource type="PackedScene" uid="uid://dgahd6usykssg" path="res://scenes/player.tscn" id="1_uwrxv"]
 [ext_resource type="Texture2D" uid="uid://beuunv8b4i653" path="res://assets/sprites/Hauses.png" id="2_lnu2h"]
@@ -6,6 +6,13 @@
 [ext_resource type="PackedScene" uid="uid://bjc4s1w1wsc1g" path="res://scenes/ui.tscn" id="3_u5sy4"]
 [ext_resource type="PackedScene" uid="uid://dtfnpqy4tm1w0" path="res://scenes/obstacle.tscn" id="4_iywne"]
 [ext_resource type="PackedScene" uid="uid://ldtp57sl81t" path="res://scenes/bomb.tscn" id="5_p57ef"]
+[ext_resource type="PackedScene" uid="uid://v4vsj8y2qnih" path="res://scenes/arrival.tscn" id="7_u5sy4"]
+[ext_resource type="PackedScene" uid="uid://chrlf66sn0bq" path="res://scenes/pax1.tscn" id="8_gee14"]
+[ext_resource type="PackedScene" uid="uid://oi3x7omuvcem" path="res://scenes/pax2.tscn" id="9_kvpfn"]
+[ext_resource type="PackedScene" uid="uid://dq0ew83e7rs1h" path="res://scenes/pax3.tscn" id="10_dinhu"]
+[ext_resource type="PackedScene" uid="uid://c8yrur5xlv1o0" path="res://scenes/pax4.tscn" id="11_kvuet"]
+[ext_resource type="Script" uid="uid://ciylviy0hkp6n" path="res://scripts/pax.gd" id="12_dinhu"]
+[ext_resource type="Script" uid="uid://dniw6fwxwm4to" path="res://scripts/arrival.gd" id="13_kvuet"]
 
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_uwrxv"]
 distance = 9.0
@@ -89,6 +96,7 @@ z_index = 10
 zoom = Vector2(4, 4)
 
 [node name="UI" parent="player/Camera2D" instance=ExtResource("3_u5sy4")]
+z_index = 16
 
 [node name="Screen_Frame" type="StaticBody2D" parent="."]
 
@@ -127,7 +135,7 @@ position = Vector2(300, 0)
 rotation = -1.5707964
 
 [node name="Bomb" parent="Obstacles" instance=ExtResource("5_p57ef")]
-position = Vector2(55, -36)
+position = Vector2(-18.999979, -529)
 rotation = 1.5707964
 
 [node name="Obstacle2" parent="Obstacles" instance=ExtResource("4_iywne")]
@@ -147,7 +155,74 @@ position = Vector2(-1.999995, -115)
 rotation = 1.5707964
 
 [node name="Bomb2" parent="Obstacles" instance=ExtResource("5_p57ef")]
-position = Vector2(-132, -82)
+position = Vector2(23.000015, -288)
 rotation = 1.5707964
 
+[node name="Levels" type="Node2D" parent="."]
+
+[node name="s1" parent="Levels" instance=ExtResource("8_gee14")]
+visible = false
+position = Vector2(-197, -47)
+script = ExtResource("12_dinhu")
+
+[node name="s2" parent="Levels" instance=ExtResource("9_kvpfn")]
+visible = false
+position = Vector2(-86, 145)
+script = ExtResource("12_dinhu")
+
+[node name="s3" parent="Levels" instance=ExtResource("10_dinhu")]
+visible = false
+position = Vector2(7, -87)
+script = ExtResource("12_dinhu")
+
+[node name="s4" parent="Levels" instance=ExtResource("11_kvuet")]
+visible = false
+position = Vector2(162, 35)
+script = ExtResource("12_dinhu")
+
+[node name="s5" parent="Levels" instance=ExtResource("9_kvpfn")]
+visible = false
+position = Vector2(-208, -138)
+script = ExtResource("12_dinhu")
+
+[node name="s6" parent="Levels" instance=ExtResource("8_gee14")]
+visible = false
+position = Vector2(-247, 91)
+script = ExtResource("12_dinhu")
+
+[node name="s7" parent="Levels" instance=ExtResource("11_kvuet")]
+visible = false
+position = Vector2(156, -53)
+script = ExtResource("12_dinhu")
+
+[node name="s8" parent="Levels" instance=ExtResource("10_dinhu")]
+visible = false
+position = Vector2(-42, 15)
+script = ExtResource("12_dinhu")
+
+[node name="casaBL" parent="Levels" instance=ExtResource("7_u5sy4")]
+visible = false
+z_index = 10
+position = Vector2(-152, 60)
+script = ExtResource("13_kvuet")
+
+[node name="casaBR" parent="Levels" instance=ExtResource("7_u5sy4")]
+visible = false
+z_index = 10
+position = Vector2(137, 90)
+script = ExtResource("13_kvuet")
+
+[node name="casaTL" parent="Levels" instance=ExtResource("7_u5sy4")]
+visible = false
+z_index = 10
+position = Vector2(-232, -70)
+script = ExtResource("13_kvuet")
+
+[node name="casaTR" parent="Levels" instance=ExtResource("7_u5sy4")]
+visible = false
+z_index = 10
+position = Vector2(185, -38)
+script = ExtResource("13_kvuet")
+
 [connection signal="distance_changed" from="player" to="player/Camera2D/UI" method="_on_player_distance_changed"]
+[connection signal="level_changed" from="player" to="player/Camera2D/UI" method="_on_player_level_changed"]

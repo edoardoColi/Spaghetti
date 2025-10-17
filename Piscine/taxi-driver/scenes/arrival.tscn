@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://v4vsj8y2qnih"]
+
+[ext_resource type="Texture2D" uid="uid://v5lagtte4e1q" path="res://assets/sprites/bandierina.png" id="1_f01bg"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_kx07h"]
+radius = 1.6666666
+height = 24.0
+
+[node name="Area2D" type="Area2D"]
+scale = Vector2(0.6, 0.6)
+collision_mask = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(5, -3.3333333)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("1_f01bg")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -2)
+shape = SubResource("CapsuleShape2D_kx07h")

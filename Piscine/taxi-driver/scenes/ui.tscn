@@ -12,13 +12,19 @@
 script/source = "extends NinePatchRect
 
 @onready var meter_label: Label = $meters
+@onready var level_label: Label = $levels
 
 func _ready() -> void:
-	update_label(0.0)
+	update_labelM(0.0)
+	update_labelLV(0)
 
-func update_label(distance: float) -> void:
+func update_labelM(distance: float) -> void:
 	# Display distance rounded to 1 decimal, in meters for example
 	meter_label.text = \"Distance: %.1f m\" % distance
+
+func update_labelLV(score: int) -> void:
+	# Display distance rounded to 1 decimal, in meters for example
+	level_label.text = \"Level: %d\" % score
 "
 
 [node name="UI" type="Control"]
@@ -205,7 +211,24 @@ grow_horizontal = 2
 grow_vertical = 0
 theme_override_colors/font_color = Color(0.99999946, 0.7067088, 0.22702873, 1)
 theme_override_font_sizes/font_size = 11
-text = "Distance: %.1f m"
+text = "Distance: %.1f km"
+
+[node name="levels" type="Label" parent="Score"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -142.0
+offset_top = -84.0
+offset_right = -17.0
+offset_bottom = -61.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.99999946, 0.7067088, 0.22702873, 1)
+theme_override_font_sizes/font_size = 11
+text = "Level: %d"
 
 [connection signal="pressed" from="Menu/Options/Play" to="." method="_on_play_pressed"]
 [connection signal="pressed" from="Menu/Options/Quit" to="." method="_on_quit_pressed"]

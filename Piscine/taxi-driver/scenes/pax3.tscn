@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://dq0ew83e7rs1h"]
+
+[ext_resource type="Texture2D" uid="uid://dq8ne36csrpcf" path="res://assets/sprites/pax3.png" id="1_5ioby"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_kx07h"]
+radius = 5.0
+height = 16.0
+
+[node name="Area2D" type="Area2D"]
+scale = Vector2(0.7, 0.7)
+collision_mask = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_5ioby")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_kx07h")

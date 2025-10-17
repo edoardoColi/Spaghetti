@@ -5,26 +5,46 @@ const ACCELERATION = 600.0
 const FRICTION = 800.0
 
 # Fuel system
-var fuel: float = 100.0
-const MAX_FUEL: float = 100.0
+var fuel: float = 200.0
+const MAX_FUEL: float = 200.0
 const FUEL_CONSUMPTION: float = 8.0  # fuel per second
 
 var stunned: bool = false
 var explode: bool = false
 
+var free: bool = true
+var level: int = 0
+
 # --- Distance tracking ---
 var total_distance: float = 0.0
 var last_position: Vector2
 signal distance_changed(distance: float)
+signal level_changed(level: int)
 
 @onready var anim_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var collision_updown: CollisionShape2D = $CollisionUpDown
 @onready var collision_leftright: CollisionShape2D = $CollisionLeftRight
 @onready var fuel_level: NinePatchRect = $Camera2D/UI/Tank/Level
 @onready var gameover: NinePatchRect = $Camera2D/UI/Gameover
+@onready var s1 = $"../Levels/s1"
+@onready var s2 = $"../Levels/s2"
+@onready var s3 = $"../Levels/s3"
+@onready var s6 = $"../Levels/s6"
+@onready var s7 = $"../Levels/s7"
+@onready var s8 = $"../Levels/s8"
 
 func _ready() -> void:
 	last_position = global_position
+	randomize() # ensure randomness
+	var all_nodes = [s1, s2, s3, s6, s7, s8]
+	var subset_size = randi_range(1, 4)
+
+	# shuffle the array and take the first `subset_size` elements
+	all_nodes.shuffle()
+	var subset = all_nodes.slice(0, subset_size)
+	for node in subset:
+		if node:
+			node.visible = true
 
 func _physics_process(delta: float) -> void:
 	# --- Input only works if NOT stunned ---
@@ -107,6 +127,23 @@ func explode_for(duration: float) -> void:
 	anim_sprite.stop()
 	var t = get_tree().create_timer(duration)
 	t.timeout.connect(func(): explode = false)
+
+func load_pax() -> bool:
+	if not free:
+		return false
+	else:
+		free = false
+		return true
+		
+func level_up() -> bool:
+	if free:
+		return false
+	else:
+		level += 1
+		level_changed.emit(level)
+		fuel += 30
+		free = true
+		return true
 
 func update_fuel_UI() -> void:
 	# Map fuel 0..MAX_FUEL to angle -125..-45 degrees
